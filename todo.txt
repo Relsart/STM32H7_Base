@@ -1,0 +1,7 @@
+TODO list:
+
+Support for Standart CAN filters
+SDMMC driver is wery raw
+Fix building without ETL library
+
+SPI: update the sample!
