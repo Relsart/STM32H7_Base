@@ -120,7 +120,7 @@ void Pin::config(GpioPort GPIOx, uint8_t pin, PinType type, Pull _pull, PinSpeed
             CLEAR_BIT(GPIOx->OTYPER, 1 << pin);
             break;
         case PinType::Out_opendrain:    // Open-drain output (0-to gnd, 1-floating)
-            //_pull = Pull::NoPull;     // In output modes no pulling!
+            _pull = Pull::NoPull;       // In output modes no pulling!
             mode = 0b01;
             SET_BIT(GPIOx->OTYPER, 1 << pin);
             break;
@@ -195,7 +195,6 @@ inline void Pin::registerPin(GPIO_TypeDef* GPIOx, uint8_t pin)
     }
     diagnosticArray[diagnosticIndex++] = pinConfig;
 }
-
 
 void Pin::pinConfigDiagnostic()
 {

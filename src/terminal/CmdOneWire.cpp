@@ -31,7 +31,6 @@ void CmdOneWireScan::exec (uint32_t argc, char** arg)
               " | " << (uint16_t)rom[i].serial[0] << " " << (uint16_t)rom[i].serial[1] << " " << (uint16_t)rom[i].serial[2] << \
               " " << (uint16_t)rom[i].serial[3] << " " << (uint16_t)rom[i].serial[4] << " " << (uint16_t)rom[i].serial[5] << \
               " | " << (uint16_t)rom[i].crc << Log::endl;
-
     }
 }
 

@@ -43,10 +43,8 @@ public:
     uart::Port console;
     spi::Spi spi1;
     I2C i2cPort;
-
-    //gpio::Pin oneWirePin;
     OneWire m_oneWire;
-   // can::Bus can1;
+    // can::Bus can1;
 
     // External memory:
     SdCard sdCard;

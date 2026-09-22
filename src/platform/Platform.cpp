@@ -109,7 +109,7 @@ void Mcu::init ()
     Log::groupOn(lmTask);
     Log(lmSystem, Info) << "Console initialised";
 
-    /** 
+    /**
      * @brief ======================= SPI initialization: =======================
      */
     {
