@@ -100,15 +100,7 @@ void Pin::config(GpioPort GPIOx, uint8_t pin, PinType type, Pull _pull, PinSpeed
     }
 
     // Pin configuration saving for diagnistic (pinConfigDiagnostic())
-    PinConfig pinConfig;
-    pinConfig.port = GPIOx;
-    pinConfig.pin = pin;
-    if (!diagnosticArray)
-    {
-        diagnosticArray = new PinConfig[150];
-        diagnosticIndex = 0;
-    }
-    diagnosticArray[diagnosticIndex++] = pinConfig;
+    registerPin(GPIOx, pin);
 
     // Pin mode configuration:
     uint8_t mode = 0;
@@ -128,7 +120,7 @@ void Pin::config(GpioPort GPIOx, uint8_t pin, PinType type, Pull _pull, PinSpeed
             CLEAR_BIT(GPIOx->OTYPER, 1 << pin);
             break;
         case PinType::Out_opendrain:    // Open-drain output (0-to gnd, 1-floating)
-            _pull = Pull::NoPull;       // In output modes no pulling!
+            //_pull = Pull::NoPull;     // In output modes no pulling!
             mode = 0b01;
             SET_BIT(GPIOx->OTYPER, 1 << pin);
             break;
@@ -190,6 +182,20 @@ void Pin::run(bool pinOn, uint32_t)
     else
         setOff();
 }
+
+inline void Pin::registerPin(GPIO_TypeDef* GPIOx, uint8_t pin)
+{
+    PinConfig pinConfig;
+    pinConfig.port = GPIOx;
+    pinConfig.pin = pin;
+    if (!diagnosticArray)
+    {
+        diagnosticArray = new PinConfig[150];
+        diagnosticIndex = 0;
+    }
+    diagnosticArray[diagnosticIndex++] = pinConfig;
+}
+
 
 void Pin::pinConfigDiagnostic()
 {

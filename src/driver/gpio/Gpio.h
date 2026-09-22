@@ -39,10 +39,12 @@ private:
      */ 
     void run(bool pinOn, uint32_t) override;
 
+    static void registerPin(GPIO_TypeDef* port, uint8_t pin);
+
 public:
     /**
      * @brief Pin configurating
-     * @param [in] _GPIOx      Port (GPIOA, GPIOB и т.д.)
+     * @param [in] _GPIOx      Port (GPIOA, GPIOB..)
      * @param [in] _pin        Pin number
      * @param [in] _type       Pin type
      * @param [in] _pull       Pulling

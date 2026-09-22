@@ -1,5 +1,5 @@
 #aux_source_directory(./ srcDir)
-set (srcDir CmdHardLog.cpp CmdSD.cpp Functions.cpp)
+set (srcDir CmdHardLog.cpp CmdOneWire.cpp CmdSD.cpp Functions.cpp)
 get_filename_component(LIB_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
 if (WITH_RTOS)

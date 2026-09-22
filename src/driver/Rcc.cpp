@@ -48,7 +48,6 @@ namespace driver {
 #define DIVR_3  4
 #define FRACN_3 0
 
-
 #elif HSE_VALUE == 25000000
 /*  Settings for external 25 MHz quartz:  */
 /*  SysClock = 400 MHz;  PLL1 out (P, Q, R) = 100 MHz  */
@@ -69,6 +68,13 @@ namespace driver {
 // #define FRACN_1 0
 // #define HPRE_Prescaler  RCC_D1CFGR_HPRE_DIV1
 // #define D2PRE RCC_D2CFGR_D2PPRE1_DIV2
+
+#define DIVM_3  5
+#define DIVN_3  100
+#define DIVP_3  8
+#define DIVQ_3  8
+#define DIVR_3  8
+#define FRACN_3 0
 #endif
 
 bool Rcc::extClockConfig()

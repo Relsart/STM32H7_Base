@@ -41,6 +41,7 @@ Peripheral peripheral;
  *  - CAN bus (on chip) CAN1:
  *    CAN RX on PA11
  *    CAN TX on PA12
+ *  - ONE_WIRE on PD8
  *
  */
 
@@ -48,6 +49,7 @@ Mcu::Mcu () : console(USART2, 128),
                             spi1(SPI1),
                             boardButton(GPIOE, 3, gpio::PinType::Input, gpio::Pull::PullUp, gpio::ExtiFront::FailingFront),
                             boardLed(GPIOA, 1, gpio::PinType::Out_pushpull, gpio::Pull::NoPull),
+                            m_oneWire(GPIOD, 8),
                             ledBlinker(boardLed),
                             i2cPort(I2C2),
                             sdCard(SDMMC1),
@@ -71,23 +73,23 @@ void Mcu::init ()
     {
         using namespace driver::gpio;
         /*  Terminal pins: (it's better to use USART2 for NUCLEO H7 board on CN9 connector) */
-        Pin::config (GPIOD, 5, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::High, AltFuncNumber::AfUart2);     // USART2 TX
-        Pin::config (GPIOD, 6, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::High, AltFuncNumber::AfUart2);     // USART2 RX
+        Pin::config(GPIOD, 5, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::High, AltFuncNumber::AfUart2);     // USART2 TX
+        Pin::config(GPIOD, 6, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::High, AltFuncNumber::AfUart2);     // USART2 RX
         /*  I2C  */
-        Pin::config (GPIOF, 1, PinType::Alt_opendrain, Pull::NoPull, PinSpeed::VeryHigh, AltFuncNumber::I2C_2);  // I2C_2 SCL
-        Pin::config (GPIOF, 0, PinType::Alt_opendrain, Pull::NoPull, PinSpeed::VeryHigh, AltFuncNumber::I2C_2);  // I2C_2 SDA
+        Pin::config(GPIOF, 1, PinType::Alt_opendrain, Pull::NoPull, PinSpeed::VeryHigh, AltFuncNumber::I2C_2);  // I2C_2 SCL
+        Pin::config(GPIOF, 0, PinType::Alt_opendrain, Pull::NoPull, PinSpeed::VeryHigh, AltFuncNumber::I2C_2);  // I2C_2 SDA
         /*  SPI  */
-        Pin::config (GPIOA, 5, PinType::Alt_pushpull, Pull::PullUp, PinSpeed::VeryHigh, AltFuncNumber::AfSpi1);  // SPI1_SCK
-        Pin::config (GPIOA, 7, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::VeryHigh, AltFuncNumber::AfSpi1);  // SPI1_MOSI
+        Pin::config(GPIOA, 5, PinType::Alt_pushpull, Pull::PullUp, PinSpeed::VeryHigh, AltFuncNumber::AfSpi1);  // SPI1_SCK
+        Pin::config(GPIOA, 7, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::VeryHigh, AltFuncNumber::AfSpi1);  // SPI1_MOSI
 
         /*  SDMMC for microSD memory card  */
         #ifdef SD_CARD_ON_DEVEBOX
-        Pin::config (GPIOC, 8,  PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D0);
-        Pin::config (GPIOC, 9,  PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D1);
-        Pin::config (GPIOC, 10, PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D2);
-        Pin::config (GPIOC, 11, PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D3);
-        Pin::config (GPIOC, 12, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::High, AltFuncNumber::SDMMC1_CK);
-        Pin::config (GPIOD, 2,  PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_CMD);
+        Pin::config(GPIOC, 8,  PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D0);
+        Pin::config(GPIOC, 9,  PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D1);
+        Pin::config(GPIOC, 10, PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D2);
+        Pin::config(GPIOC, 11, PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_D3);
+        Pin::config(GPIOC, 12, PinType::Alt_pushpull, Pull::NoPull, PinSpeed::High, AltFuncNumber::SDMMC1_CK);
+        Pin::config(GPIOD, 2,  PinType::Alt_pushpull, Pull::PullUp, PinSpeed::High, AltFuncNumber::SDMMC1_CMD);
         #endif
     }   // using namespace driver::gpio;
 
@@ -107,7 +109,7 @@ void Mcu::init ()
     Log::groupOn(lmTask);
     Log(lmSystem, Info) << "Console initialised";
 
-    /**
+    /** 
      * @brief ======================= SPI initialization: =======================
      */
     {
@@ -160,6 +162,11 @@ void Mcu::init ()
      */
     i2cPort.init(I2C::Speed::Fast400kHz);
     i2cPort.onRxStream(&i2cStream);
+
+    /**
+     * @brief ======================= OneWire initialization: =======================
+     */
+    m_oneWire.init();
     
     /**
      * @brief ========== GPIO pin diagnostic against re-initialization: ==========
