@@ -14,6 +14,7 @@
 #include "driver/Dwt.h"
 #include "driver/sdmmc/Sdmmc.h"
 #include "Blinker.h"
+#include "driver/OneWire.h"
 
 using namespace driver;
 
@@ -42,7 +43,8 @@ public:
     uart::Port console;
     spi::Spi spi1;
     I2C i2cPort;
-   // can::Bus can1;
+    OneWire m_oneWire;
+    // can::Bus can1;
 
     // External memory:
     SdCard sdCard;
