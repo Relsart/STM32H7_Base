@@ -3,40 +3,40 @@
 #include "driver/SysTimer.h"
 #include "Loger.h"
 
-
 namespace platform {
 
 /**
  * @brief Led-blinker control class
  * @details Indicator of MCU correct working
  */
-class LedBlinker : public SlotInterface <Irq>
+class LedBlinker
 {
 private:
     #ifndef WITH_RTOS
-    SignalTime<Irq> m_timeSignal;
+    SoftTimer m_timer;  // Simple main-loop timer
+    #else
+    // TODO: RTOS timer here
     #endif
-    driver::gpio::Pin& m_pin;
 
-    void run (Irq , uint32_t) override
+    driver::gpio::Pin& m_pin;   // GPIO pin link
+
+    /**
+     * @brief Blink signal handler
+     */
+    void blink()
     {
-        //Log(lmSystem, Info) << "Tick " << driver::getMsTicks();
-        m_debugSignal.activ(1);
-        m_pin.invert ();
+        m_pin.invert();
     }
 
 public:
-    Signal<Irq> m_debugSignal;
-
-    #ifndef WITH_RTOS
-    LedBlinker (driver::gpio::Pin& pin) : m_timeSignal(500), m_pin(pin)
+    /**
+     * @brief Constructor
+     */
+    LedBlinker(driver::gpio::Pin& pin) : m_pin(pin)
     {
-        m_timeSignal.connect(this);
+        m_timer.setCallback(SoftTimer::Callback::create<LedBlinker, &LedBlinker::blink>(*this));
+        m_timer.start(500, i_face::I_Timer::WorkingMode::Periodic);
     }
-    #else
-    LedBlinker (driver::gpio::Pin& pin) : m_pin(pin)
-    {}
-    #endif
 };
 
 }   // namespace platform

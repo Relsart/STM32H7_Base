@@ -9,6 +9,7 @@ enum LogGroup
 {
     lmSystem = 0,
     lmTask,
+    lmExtLibs,
     lmSDMMC,
     lmFatFs,
     lmThermoArray,
@@ -22,6 +23,7 @@ static constexpr const char* moduleNames [lmEnd] =
 {
     "System: ",
     "Task: ",
+    "Library: ",
     "SDMMC: ", 
     "FAT file system: ", 
     "Thermo sensor: "

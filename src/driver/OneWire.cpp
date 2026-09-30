@@ -39,7 +39,7 @@ void OneWire::searchReset()
         m_searchState.romIdValue[i] = 0;
 }
 
-uint8_t OneWire::scanBus(OneWireDevROM* serial, int maxDevCount)
+uint8_t OneWire::scanBus(DeviceRomId* serial, int maxDevCount)
 {
     if (!serial || maxDevCount == 0)
         return 0;
@@ -48,7 +48,7 @@ uint8_t OneWire::scanBus(OneWireDevROM* serial, int maxDevCount)
     searchReset();
     while (searchCycle() && sensorCount < maxDevCount)
     {
-        memcpy(&(serial[sensorCount]), m_searchState.romIdValue, sizeof(OneWireDevROM));
+        memcpy(serial[sensorCount].romArray, m_searchState.romIdValue, 8);
         sensorCount++;
     }
     return sensorCount;
@@ -121,9 +121,9 @@ bool OneWire::searchCycle()
     }
     
     /* Evaluation of search results */
-    bool crcOk = (m_searchState.romIdValue[7] == driver::getcrc8(m_searchState.romIdValue, 7, 0x00, 0x31, 0x07));
+    bool crcOk = (m_searchState.romIdValue[7] == calcCrc(m_searchState.romIdValue, 7));
     bool searchIsOk = false;
-    if (bitPos == 64 && (crcOk))   // TODO: CRC check!
+    if (bitPos == 64 && (crcOk))
     {
         m_searchState.lastDiscrepancy = lastZero;
         m_searchState.lastDeviceFlag = (m_searchState.lastDiscrepancy == 0);
@@ -201,6 +201,14 @@ uint8_t OneWire::readByte()
             dataByte |= (1 << i);
     }
     return dataByte;
+}
+
+uint8_t OneWire::calcCrc(uint8_t* data, uint32_t size)
+{
+    if (!data || size == 0)
+        return 0;
+
+    return driver::getcrc8(data, size, 0x00, 0x31, 0x07);
 }
 
 }   // namespace driver

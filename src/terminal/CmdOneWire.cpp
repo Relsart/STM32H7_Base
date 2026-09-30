@@ -21,16 +21,16 @@ void CmdOneWireScan::exec (uint32_t argc, char** arg)
     }
 
     Log() << Log::endl << Log::Base::Dec << "Search OneWire bus for " << devCount << " device(s), ";
-    driver::OneWireDevROM rom[devCount]{0};
+    i_face::I_OneWire::DeviceRomId rom[devCount]{0};
     uint8_t found = platform::mcu.m_oneWire.scanBus(rom, devCount);
     Log() << Log::Base::Dec << "found: " << found << Log::endl;
 
     for (uint8_t i = 0; i < found; i++)
     {
-        Log() << Log::Base::Dec << "Device " << (uint16_t)i << ": " << Log::Base::Hex << (uint16_t)rom[i].familyCode << \
-              " | " << (uint16_t)rom[i].serial[0] << " " << (uint16_t)rom[i].serial[1] << " " << (uint16_t)rom[i].serial[2] << \
-              " " << (uint16_t)rom[i].serial[3] << " " << (uint16_t)rom[i].serial[4] << " " << (uint16_t)rom[i].serial[5] << \
-              " | " << (uint16_t)rom[i].crc << Log::endl;
+        Log() << Log::Base::Dec << "Device " << (uint16_t)i << ": " << Log::Base::Hex << (uint16_t)rom[i].romStruct.familyCode << \
+              " | " << (uint16_t)rom[i].romStruct.serial[0] << " " << (uint16_t)rom[i].romStruct.serial[1] << " " << (uint16_t)rom[i].romStruct.serial[2] << \
+              " " << (uint16_t)rom[i].romStruct.serial[3] << " " << (uint16_t)rom[i].romStruct.serial[4] << " " << (uint16_t)rom[i].romStruct.serial[5] << \
+              " | " << (uint16_t)rom[i].romStruct.crc << Log::endl;
     }
 }
 

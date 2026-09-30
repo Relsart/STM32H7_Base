@@ -2,38 +2,18 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "stm32h7xx.h"
+#include "Interface.h"
 #include "Dwt.h"
 
 namespace driver {
+using namespace i_face;
 
 /**
- * @brief ROM serial structure of OneWire device
+ * @brief OneWire interface class
  */
-struct __attribute__((packed)) OneWireDevROM
-{
-    uint8_t familyCode;
-    uint8_t serial[6];
-    uint8_t crc;
-};
-
-/**
- * @brief OneWire interface class  
- */
-class OneWire
+class OneWire : public I_OneWire
 {
 public:
-    /**
-     * @brief OneWire general commands codes
-     */
-    enum class Comamnds : uint8_t
-    {
-        SearchRom   = 0xF0,  // Search algorithm, which find out the unique 64-bit addresses of all devices on the bus
-        SkipRom     = 0xCC,  // Accessing all devices at once
-        MatchRom    = 0x55,  // Accessing a specific device by its 64-bit address
-        ReadRom     = 0x33,  // Read the address if there is only one device on the bus
-        AlarmSearch = 0xEC   // Search for devices that have an alarm flag triggered
-    };
-
     /**
      * @brief Constructor
      * @param [in] GPIOx Port (GPIOA, GPIOB..)
@@ -50,7 +30,7 @@ public:
      * @brief Bus reset
      * @return True: there is at least one device on the bus, False: no devices
      */
-    bool resetBus();
+    bool resetBus() override;
 
     /**
      * @brief Bus scan for connected devices ROM IDs
@@ -58,19 +38,39 @@ public:
      * @param [in] maxDevCount Number of connected devices 
      * @return Number of successfully found devices
      */
-    uint8_t scanBus(OneWireDevROM* serial, int maxDevCount);
+    uint8_t scanBus(DeviceRomId* serial, int maxDevCount);
 
     /**
      * @brief Transmit byte to the bus
      * @param [in] dataByte Data
      */
-    void writeByte(uint8_t dataByte);
+    void writeByte(uint8_t dataByte) override;
 
     /**
      * @brief Receive byte from the bus
      * @return Data
      */
-    uint8_t readByte();
+    uint8_t readByte() override;
+
+    /**
+     * @brief One bit receiving
+     * @return Bit value
+     */
+    bool readBit() override;
+
+    /**
+     * @brief One bit transmitting
+     * @param [in] bit Bit value
+     */
+    void writeBit(bool bit) override;
+
+    /**
+     * @brief Checksum calculation
+     * @param [in] data
+     * @param [in] size
+     * @return Checksum value
+     */
+    uint8_t calcCrc(uint8_t* data, uint32_t size) override;
 
 private:
     GPIO_TypeDef* const m_GPIOx;    // GPIO port
@@ -89,18 +89,6 @@ private:
         uint8_t romIdValue[8]{0};
     };
     SearchState m_searchState;
-
-    /**
-     * @brief One bit receiving
-     * @return Bit value
-     */
-    bool readBit();
-
-    /**
-     * @brief One bit transmitting
-     * @param [in] bit Bit value
-     */
-    void writeBit(bool bit);
 
     /**
      * @brief One device ROM Id searching cycle (64 bits)

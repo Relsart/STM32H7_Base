@@ -23,6 +23,11 @@ extern "C" void SysTick_Handler(void)
 }
 
 /**
+ * @brief TIMER interruptions handlers
+ */
+
+
+/**
  * @brief UART interruptions handlers
  */
 extern "C" void USART1_IRQHandler(void)  

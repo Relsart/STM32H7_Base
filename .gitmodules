@@ -4,3 +4,6 @@
 [submodule "src/modules"]
 	path = src/modules
 	url = https://github.com/Relsart/MCU_Modules.git
+[submodule "src/libs/sensor"]
+	path = src/libs/sensor
+	url = https://github.com/Relsart/Sensor_Library.git
