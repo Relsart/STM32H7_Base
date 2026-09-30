@@ -66,6 +66,10 @@ public:
  */
 class Peripheral
 {
+private:
+    friend class Mcu;
+    Mcu* const m_Mcu;
+
 public:
     /**
      * @brief Constructor.
@@ -78,9 +82,6 @@ public:
      */
     bool init();
 
-private:
-    friend class Mcu;
-    Mcu* const m_Mcu; 
 };
 
 

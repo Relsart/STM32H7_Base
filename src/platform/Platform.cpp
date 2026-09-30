@@ -107,6 +107,7 @@ void Mcu::init ()
     Log::setPortChecking(Log::IsPortAvailable::create<uart::Port, &uart::Port::dmaTxIsBusy>(console));
     Log::groupOn(lmSystem);
     Log::groupOn(lmTask);
+    Log::groupOn(lmExtLibs);
     Log(lmSystem, Info) << "Console initialised";
 
     /**
@@ -167,6 +168,7 @@ void Mcu::init ()
      * @brief ======================= OneWire initialization: =======================
      */
     m_oneWire.init();
+    m_oneWire.resetBus();
     
     /**
      * @brief ========== GPIO pin diagnostic against re-initialization: ==========
