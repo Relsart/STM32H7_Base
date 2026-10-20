@@ -18,8 +18,7 @@ Bus::Bus(FDCAN_GlobalTypeDef* can) :
     m_ExtFiltersAddr(messageRamAddr + (m_ExtFiltersOffset * sizeof(uint32_t)) + (m_canNumber * m_ExtFiltersMaxCount * m_ExtFilterWordSize * sizeof(uint32_t))),
     m_RxFifoAddr(messageRamAddr + (m_RxFifoOffset * sizeof(uint32_t)) + (m_canNumber * m_RxFifoPacksCount * m_FifoPackWordSize * sizeof(uint32_t))),
     m_TxFifoAddr(messageRamAddr + (m_TxFifoOffset * sizeof(uint32_t)) + (m_canNumber * m_TxFifoPacksCount * m_FifoPackWordSize * sizeof(uint32_t))),
-    receiver(can, m_RxFifoAddr),
-    m_txBuffer(256)
+    receiver(can, m_RxFifoAddr)
 {
     int a = 0;
     a++;
@@ -161,7 +160,7 @@ void Bus::run(Message* msg, uint32_t)
 
 void Bus::send(Message &msg)
 {
-    if (!m_txBuffer.write(msg))
+    if (!m_txBuffer.push(msg))
         Log(lmSystem, Error) << "CAN_" << (m_canNumber ? "2" : "1") << ": Tx buffer overloaded";
     txFromBufferToCan();
 }
@@ -175,7 +174,7 @@ void Bus::txFromBufferToCan()
     const uint8_t extIdBitPos = 30;     // Extended ID flag position
     const uint8_t dlcBitPos = 16;       // Data Length Code position
     
-    while (!READ_BIT(m_can->TXFQS, FDCAN_TXFQS_TFQF) && m_txBuffer.read(msg))
+    while (!READ_BIT(m_can->TXFQS, FDCAN_TXFQS_TFQF) && m_txBuffer.pop(msg))
     {
         msg.id &= extIdMask;
         volatile uint8_t tx_index = (m_can->TXFQS & FDCAN_TXFQS_TFQPI_Msk) >> FDCAN_TXFQS_TFQPI_Pos;

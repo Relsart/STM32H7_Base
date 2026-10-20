@@ -15,6 +15,7 @@
 #include "driver/sdmmc/Sdmmc.h"
 #include "Blinker.h"
 #include "driver/OneWire.h"
+#include "RingBuffer.h"
 
 using namespace driver;
 
@@ -40,6 +41,7 @@ public:
     dma::Stream i2cStream;
     
     // Communication ports and interfaces:
+    RingBuffer<128> consoleRB;
     uart::Port console;
     spi::Spi spi1;
     I2C i2cPort;

@@ -45,16 +45,16 @@ Peripheral peripheral;
  *
  */
 
-Mcu::Mcu () : console(USART2, 128),
-                            spi1(SPI1),
-                            boardButton(GPIOE, 3, gpio::PinType::Input, gpio::Pull::PullUp, gpio::ExtiFront::FailingFront),
-                            boardLed(GPIOA, 1, gpio::PinType::Out_pushpull, gpio::Pull::NoPull),
-                            m_oneWire(GPIOD, 8),
-                            ledBlinker(boardLed),
-                            i2cPort(I2C2),
-                            sdCard(SDMMC1),
-                            usbDev(USB_OTG_FS)
-                           // can1(FDCAN1)
+Mcu::Mcu () :   console(USART2, consoleRB),
+                spi1(SPI1),
+                boardButton(GPIOE, 3, gpio::PinType::Input, gpio::Pull::PullUp, gpio::ExtiFront::FailingFront),
+                boardLed(GPIOA, 1, gpio::PinType::Out_pushpull, gpio::Pull::NoPull),
+                m_oneWire(GPIOD, 8),
+                ledBlinker(boardLed),
+                i2cPort(I2C2),
+                sdCard(SDMMC1),
+                usbDev(USB_OTG_FS)
+                // can1(FDCAN1)
 {}
 
 void Mcu::init ()
@@ -99,7 +99,7 @@ void Mcu::init ()
     console.init(921600);
     console.setSlotRx(&(console::Terminal::getInstance()));
     console.onTxStream(&logStream);
-    console.setTxMode(uart::Mode::Dma);
+    console.setTxMode(uart::Port::Mode::Dma);
     console.setNvicPriority(4);
     
     Log::setTransmitter(Log::DataSender::create<uart::Port, &uart::Port::transmit>(console));
