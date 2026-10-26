@@ -101,8 +101,8 @@ void Bus::init(Config config)
     WRITE_REG(m_can->GFC, FDCAN_GFC_ANFS | FDCAN_GFC_ANFE);     // Reject frames non-matching with any filter
     CLEAR_BIT (m_can->CCCR, FDCAN_CCCR_FDOE | FDCAN_CCCR_BRSE); // Disable FD and bitrate switching (Clear by default!)
     uint32_t tmpConfig = m_can->CCCR;
-    MODIFY_REG(tmpConfig, FDCAN_CCCR_DAR_Msk, (m_config.oneShotMode ? 1 : 0) << FDCAN_CCCR_DAR_Pos);    // One-shot mode
-    MODIFY_REG(tmpConfig, FDCAN_CCCR_MON_Msk, (m_config.listenOnlyMode ? 1 : 0) << FDCAN_CCCR_MON_Pos); // Silent mode TODO: CHECK!!!
+    MODIFY_REG(tmpConfig, FDCAN_CCCR_DAR_Msk, (m_config.oneShotMode ? 1U : 0U) << FDCAN_CCCR_DAR_Pos);    // One-shot mode
+    MODIFY_REG(tmpConfig, FDCAN_CCCR_MON_Msk, (m_config.listenOnlyMode ? 1U : 0U) << FDCAN_CCCR_MON_Pos); // Silent mode TODO: CHECK!!!
     WRITE_REG(m_can->CCCR, tmpConfig);
 
     // Finishing initialization:

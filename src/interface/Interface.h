@@ -11,6 +11,23 @@ namespace i_face
 {
 
 /**
+ * @brief DMA bufffer interface
+ */
+class I_DmaBuffer
+{
+public:
+    virtual ~I_DmaBuffer() = default;    // Interface virtual destructor
+
+    virtual uint32_t* getAddr() = 0;
+    virtual const uint32_t* getAddr() const = 0;
+    virtual size_t getSize() const = 0;
+    virtual uint8_t& operator[](size_t index) = 0;
+    virtual const uint8_t& operator[](size_t index) const = 0;
+    virtual void clean() const = 0;
+    virtual void invalidate() = 0;
+};
+
+/**
  * @brief One Wire bus interface
  */
 class I_OneWire
@@ -150,6 +167,24 @@ public:
     virtual void transmit(void*, uint32_t) = 0;                 // Send data to port
     virtual void receiveViaDma(uint16_t, bool circular) = 0;    // Start receiving data via DMA stream
     virtual I_RingBuffer& getBuffer() = 0;                      // Get link to ring buffer
+};
+
+/**
+ * @brief I2C interface
+ */
+class I_I2C
+{
+public:
+    virtual ~I_I2C() = default;     // Interface virtual destructor
+    /* General functional: */
+    virtual bool isBusy() = 0;
+    virtual void resetBus() = 0;
+    virtual bool masterTx(uint16_t addr, uint8_t* src, uint16_t size, uint32_t timeout) = 0;
+    virtual bool masterRx(uint16_t addr, uint8_t* dest, uint16_t size, uint32_t timeout) = 0;
+    virtual bool masterTxRx(uint16_t addr, uint8_t* src, uint16_t srcSize, uint8_t *dest, uint32_t destSize, uint32_t timeout) = 0;
+    /* Extended registers access methods */
+    virtual bool read8bReg_DMA(uint16_t addr, uint8_t regAddr, I_DmaBuffer& dest, size_t readSize, size_t bufferOffset = 0) = 0;
+    virtual bool read16bReg_DMA(uint16_t addr, uint16_t regAddr, I_DmaBuffer& dest, size_t readSize, size_t bufferOffset = 0) = 0;
 };
 
 }   // namespace i_face

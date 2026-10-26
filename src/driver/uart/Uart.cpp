@@ -168,8 +168,10 @@ void Port::setRxCallback(RxCallback h)
 {
     if (m_signalInstantRx.isConnected())
         m_signalInstantRx.disconnectAll();
+    #ifndef WITH_RTOS
     if (m_signalRx.isConnected())
         m_signalRx.disconnectAll();
+    #endif
     // Work only with callback:
     m_rxCallback = h;
 }

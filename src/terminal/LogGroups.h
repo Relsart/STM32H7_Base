@@ -13,6 +13,7 @@ enum LogGroup
     lmSDMMC,
     lmFatFs,
     lmThermoArray,
+    lmParser,
     lmEnd
 };
 
@@ -26,5 +27,6 @@ static constexpr const char* moduleNames [lmEnd] =
     "Library: ",
     "SDMMC: ", 
     "FAT file system: ", 
-    "Thermo sensor: "
+    "Thermo sensor: ",
+    "Data parsing: "
 };
