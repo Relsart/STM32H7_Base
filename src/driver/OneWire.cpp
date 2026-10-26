@@ -5,7 +5,7 @@
 
 namespace driver {
 
-OneWire::OneWire(GPIO_TypeDef* GPIOx, uint8_t pin) : m_GPIOx(GPIOx), m_pin(pin), m_pinMask(1 << pin), m_delayer(DwtTimer::getInstance())
+OneWire::OneWire(GPIO_TypeDef* GPIOx, uint8_t pin) : m_GPIOx(GPIOx), m_pin(pin), m_pinMask(1U << pin), m_delayer(DwtTimer::getInstance())
 {}
 
 void OneWire::init()
@@ -187,7 +187,7 @@ void OneWire::writeByte(uint8_t dataByte)
     // Transmit starting from the LSB:
     for (uint8_t i = 0; i < 8; i++)
     {
-        writeBit(dataByte & (1 << i));
+        writeBit(dataByte & (1U << i));
     }
 }
 
@@ -198,7 +198,7 @@ uint8_t OneWire::readByte()
     for (uint8_t i = 0; i < 8; i++)
     {
         if (readBit())
-            dataByte |= (1 << i);
+            dataByte |= (1U << i);
     }
     return dataByte;
 }

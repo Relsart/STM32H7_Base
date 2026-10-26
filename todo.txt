@@ -4,4 +4,3 @@ Support for Standart CAN filters
 SDMMC driver is raw
 Fix building without ETL library
 
-SPI: update the sample!

@@ -53,7 +53,7 @@ void IrqHandler::run (uint8_t, uint32_t)
             if (msg.extended)
                 msg.id = element->id;
             else
-                msg.id = (element->id >> 18) & 0x7FF;
+                msg.id = (element->id >> 18U) & 0x7FF;
 
             for (int i = 0; i < msg.length; i++)
                 msg.data[i] = element->data[i];

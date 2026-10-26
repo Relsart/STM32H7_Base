@@ -174,6 +174,13 @@ void Mcu::init ()
      * @brief ========== GPIO pin diagnostic against re-initialization: ==========
      */
     gpio::Pin::pinConfigDiagnostic();
+
+    /**
+     * @brief ========================= Enabling Cache: ==========================
+     * @details If confident that cache coherency issues will be resolved
+     */
+    //SCB_InvalidateDCache(); 
+    //SCB_EnableDCache();
 }
 
 Peripheral::Peripheral() : m_Mcu(&mcu)

@@ -5,7 +5,7 @@ namespace gpio {
 
 Contact::Contact(GpioPort GPIOx, uint8_t pin) : 
     m_GPIOx(GPIOx), 
-    m_pinPos(1 << pin),
+    m_pinPos(1U << pin),
     m_FilterSetpoint(200),
     m_filterCounter(m_FilterSetpoint / 2),
     m_flagRising(false),
@@ -16,7 +16,7 @@ void Contact::scan()
 {
     bool currentRawState = ((m_GPIOx->IDR & m_pinPos) != 0);    // Get physical raw level
 
-    // Integrating: if HIGH— move the counter up, if LOW, move it down:
+    // Integrating: if HIGH move the counter up, if LOW, move it down:
     if (currentRawState) 
         if (m_filterCounter < m_FilterSetpoint) m_filterCounter++;
     else 
