@@ -1,9 +1,9 @@
-[submodule "src/modules"]
-	path = src/modules
-	url = https://gitlab.com/modules9485514/stm32_modules.git
 [submodule "src/thirdParty/etl"]
 	path = src/thirdParty/etl
 	url = https://github.com/ETLCPP/etl.git
+[submodule "src/modules"]
+	path = src/modules
+	url = https://github.com/Relsart/MCU_Modules.git
 [submodule "src/libs/sensor"]
 	path = src/libs/sensor
-	url = https://gitlab.com/libraries863547/sensorlib.git
+	url = https://github.com/Relsart/Sensor_Library.git
