@@ -26,21 +26,21 @@ void Contact::scan()
     if (m_filterCounter == m_FilterSetpoint && !m_debouncedState) // Stable HIGH achieved
     {
         m_debouncedState = true;
-        m_flagRising = true;    // Rising front fixed
+        m_flagRising.store(true, etl::memory_order_relaxed);    // Rising front fixed
     }
     else if (m_filterCounter == 0 && m_debouncedState)  // Stable LOW achieved
     {
         m_debouncedState = false;
-        m_flagFalling = true;   // Falling front fixed
+        m_flagFalling.store(true, etl::memory_order_relaxed);   // Falling front fixed
     }
 }
 
 bool Contact::getHighFront()
 {
     // __disable_irq(); 
-    if (m_flagRising.load())
+    if (m_flagRising.load(etl::memory_order_acquire))
     {
-        m_flagRising.store(false);
+        m_flagRising.store(false, etl::memory_order_release);
         // __enable_irq();
         return true;
     }
@@ -50,9 +50,9 @@ bool Contact::getHighFront()
 
 bool Contact::getLowFront()
 {
-    if (m_flagFalling.load())
+    if (m_flagFalling.load(etl::memory_order_acquire))
     {
-        m_flagFalling.store(false);
+        m_flagFalling.store(false, etl::memory_order_release);
         return true;
     }
     return false;
