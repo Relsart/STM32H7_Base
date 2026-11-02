@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <etl/limits.h>
+#include "Interface.h"
 
 namespace driver {
 
@@ -17,7 +18,7 @@ namespace driver {
  * ACHTUNG:  For correct DWT working SystemCoreClock should have correct core clock frequency value
  */
 
-class DwtTimer
+class DwtTimer : public i_face::I_Delayer
 {
 private:
     DwtTimer();
@@ -61,8 +62,8 @@ public:
     /**
      * @brief Delays in milliseconds or microseconds (IRQ independed)
      */
-    void delayMs(uint32_t ms);
-    void delayUs(uint32_t us);
+    void delayMs(uint32_t ms) override;
+    void delayUs(uint32_t us) override;
 };
 
 }   // namespace driver

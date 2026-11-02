@@ -31,6 +31,7 @@ Peripheral peripheral;
  *    D3 on PC11
  *    CK on PC12
  *    CMD on PD2
+ *  - I2C_1: PB6-SCL, PB7-SDA
  * 
  *    * * * ZL-10 STM32H743VGT6 black board with CAN, RS-485 and RS-232 periphery: * * *
  * 
