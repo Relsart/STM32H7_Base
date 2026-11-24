@@ -25,7 +25,10 @@ private:
     DwtTimer(DwtTimer&) = delete;
 
     static constexpr uint32_t max32 = etl::numeric_limits<uint32_t>::max();   // Max value of 32-bit unsigned variable 
-    uint32_t m_ticksLeft;    // Number of DWT ticks for delays (decremental counter)
+    uint32_t m_ticksLeft;           // Number of DWT ticks for delays (decremental counter)
+    uint32_t m_timingTicks = 0;     // Init value, starting of timing (for timings calculation)
+    uint32_t m_ticksPerMs = 0;      // System ticks per millisecond value (for timings calculation)
+    uint32_t m_ticksPerUs = 0;      // System ticks per microsecond value (for timings calculation)
 
     /**
      * @brief Time delay in DWT ticks
@@ -58,6 +61,21 @@ public:
      * @return True == set time has elapsed
      */
     bool checkTimeout(TimeoutData& params);
+
+    /**
+     * @brief Start timing measurement (save the current ticker value)
+     */
+    void startTiming();
+    
+    /**
+     * @brief Get timing value (since last startTiming() invoking) in milliseconds
+     */
+    uint32_t getTimingMs();
+
+    /**
+     * @brief Get timing value (since last startTiming() invoking) in microseconds
+     */
+    uint32_t getTimingUs();
 
     /**
      * @brief Delays in milliseconds or microseconds (IRQ independed)
